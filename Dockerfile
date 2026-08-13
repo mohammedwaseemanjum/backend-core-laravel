@@ -34,8 +34,12 @@ COPY composer.json composer.lock ./
 # Copy existing application directory contents
 COPY . /var/www
 
-# Install production dependencies
-RUN composer install --no-dev --optimize-autoloader --no-interaction
+# Install PHP dependencies
+RUN composer install \
+    --no-dev \
+    --optimize-autoloader \
+    --no-interaction \
+    --prefer-dist
 
 # Set correct permissions for storage and bootstrap cache
 RUN chown -R www-data:www-data /var/www/storage /var/www/bootstrap/cache
