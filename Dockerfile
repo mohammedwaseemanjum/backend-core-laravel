@@ -23,7 +23,7 @@ RUN composer install --no-dev --optimize-autoloader --no-interaction
 RUN chmod +x /var/www/html/scripts/00-laravel-deploy.sh
 
 # Set permissions for Laravel
-RUN chown -R www-data:www-data /var/www/storage /var/www/bootstrap/cache
+RUN chmod -R 775 /var/www/storage /var/www/bootstrap/cache
 
 EXPOSE 80
 
