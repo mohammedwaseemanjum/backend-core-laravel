@@ -18,8 +18,12 @@ RUN apk add --no-cache \
 
 RUN docker-php-ext-install pdo pdo_pgsql mbstring exif pcntl bcmath gd
 
-RUN docker-php-ext-install ffi
-RUN echo "ffi.enable=true" >> /usr/local/etc/php/php.ini
+# Configure and enable FFI extension
+RUN docker-php-ext-configure ffi --with-ffi \
+    && docker-php-ext-install ffi
+
+# Enable ffi directive in php.ini
+RUN echo "ffi.enable=true" > /usr/local/etc/php/conf.d/ffi.ini
 
 # Install Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
