@@ -1,29 +1,39 @@
-# Use official PHP 8.2+ CLI image as requested by Laravel 12
+# Use official PHP 8.3 FPM image (Debian-based)
 FROM php:8.3-fpm
 
-# Install system dependencies and PHP extensions required for Laravel 12
-RUN apk add --no-cache \
-    libc6-compat \
-    libffi-dev \
+# Install system dependencies
+RUN apt-get update && apt-get install -y \
     nginx \
     supervisor \
     curl \
     libpng-dev \
     libxml2-dev \
+    libzip-dev \
     zip \
     unzip \
     git \
-    oniguruma-dev \
-    postgresql-dev \
-    linux-headers
+    libonig-dev \
+    libpq-dev \
+    libffi-dev \
+    linux-headers-amd64 \
+    && rm -rf /var/lib/apt/lists/*
 
-RUN docker-php-ext-install pdo pdo_pgsql mbstring exif pcntl bcmath gd
+# Install PHP extensions required by Laravel
+RUN docker-php-ext-install \
+    pdo \
+    pdo_pgsql \
+    mbstring \
+    exif \
+    pcntl \
+    bcmath \
+    gd \
+    zip
 
-# Configure and enable FFI extension
+# Configure and install FFI
 RUN docker-php-ext-configure ffi --with-ffi \
     && docker-php-ext-install ffi
 
-# Enable ffi directive in php.ini
+# Enable FFI
 RUN echo "ffi.enable=true" > /usr/local/etc/php/conf.d/ffi.ini
 
 # Install Composer
@@ -32,17 +42,20 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 # Set working directory
 WORKDIR /var/www
 
-# Copy existing application directory contents
+# Copy Laravel application
 COPY . /var/www
 
 # Install PHP dependencies
-RUN composer install --no-dev --optimize-autoloader --no-interaction
+RUN composer install \
+    --no-dev \
+    --optimize-autoloader \
+    --no-interaction
 
-# Set correct permissions for storage and bootstrap cache
+# Set Laravel permissions
 RUN chown -R www-data:www-data /var/www/storage /var/www/bootstrap/cache
 
-RUN chown -R www-data:www-data /var/www/database
-RUN chmod -R 775 /var/www/database
+RUN chown -R www-data:www-data /var/www/database \
+    && chmod -R 775 /var/www/database
 
 # Make deployment script executable
 RUN chmod +x /var/www/deploy.sh
@@ -53,11 +66,11 @@ COPY ./nginx.conf /etc/nginx/nginx.conf
 # Laravel package discovery
 RUN php artisan package:discover --ansi
 
-# Clear cached configuration
+# Clear Laravel cache
 RUN php artisan optimize:clear
 
-# Expose Render's expected port
+# Render uses port 80
 EXPOSE 80
 
-# Run the deploy script and start Nginx/PHP-FPM
+# Start deployment script, PHP-FPM and Nginx
 CMD /var/www/deploy.sh && php-fpm -D && nginx -g "daemon off;"
