@@ -1,28 +1,45 @@
+# Use official PHP 8.2+ CLI image as requested by Laravel 12
 FROM php:8.3-fpm-alpine
 
-# Install system dependencies and PHP extensions
-RUN apk add --no-cache nginx wget supervisor bash libpng-dev libjpeg-turbo-dev freetype-dev zip libzip-dev \
-    && docker-php-ext-configure gd --with-freetype --with-jpeg \
-    && docker-php-ext-install pdo pdo_mysql gd zip bcmath opcache
+# Install system dependencies and PHP extensions required for Laravel 12
+RUN apk add --no-cache \
+    nginx \
+    supervisor \
+    curl \
+    libpng-dev \
+    libxml2-dev \
+    zip \
+    unzip \
+    git \
+    oniguruma-dev \
+    postgresql-dev \
+    linux-headers
 
-# Configure NGINX and Supervisor
-COPY conf/nginx/nginx-site.conf /etc/nginx/http.d/default.conf
-COPY conf/supervisor/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+RUN docker-php-ext-install pdo pdo_pgsql mbstring exif pcntl bcmath gd
+
+# Install Composer
+COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 # Set working directory
-WORKDIR /var/www/html
-COPY . .
+WORKDIR /var/www
 
-# Get latest Composer
-COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+# Copy existing application directory contents
+COPY . /var/www
 
 # Install production dependencies
 RUN composer install --no-dev --optimize-autoloader --no-interaction
 
-# Set permissions for Laravel
-RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
-RUN chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
+# Set correct permissions for storage and bootstrap cache
+RUN chown -R www-data:www-data /var/www/storage /var/www/bootstrap/cache
 
+# Make deployment script executable
+RUN chmod +x /var/www/deploy.sh
+
+# Copy Nginx configuration
+COPY ./nginx.conf /etc/nginx/nginx.conf
+
+# Expose Render's expected port
 EXPOSE 80
 
-CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf", "/start.sh"]
+# Run the deploy script and start Nginx/PHP-FPM
+CMD /var/www/deploy.sh && php-fpm -D && nginx -g "daemon off;"
