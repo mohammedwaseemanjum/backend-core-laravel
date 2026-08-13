@@ -1,5 +1,5 @@
 # Use official PHP 8.2+ CLI image as requested by Laravel 12
-FROM php:8.3-fpm-alpine
+FROM php:8.3-fpm
 
 # Install system dependencies and PHP extensions required for Laravel 12
 RUN apk add --no-cache \
