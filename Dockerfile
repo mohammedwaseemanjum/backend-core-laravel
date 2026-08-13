@@ -28,7 +28,7 @@ COPY . /var/www
 
 # Install production dependencies
 RUN composer require turso/libsql dev-master
-RUN composer require turso/libsql-laravel:^0.2.0
+RUN composer require turso/libsql-laravel:^0.2.0 -W
 RUN composer install --no-dev --optimize-autoloader --no-interaction
 
 # Set correct permissions for storage and bootstrap cache
