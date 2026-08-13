@@ -3,14 +3,10 @@
 # Fail immediately if any command fails
 set -e
 
-if [ ! -f /var/data/database.sqlite ]; then
+if [ ! -f /var/www/html/database/database.sqlite ]; then
     echo "--- Creating fresh SQLite database file ---"
     touch /var/www/html/database/database.sqlite
 fi
-
-echo "Running composer"
-composer global require hirak/prestissimo
-composer install --no-dev --working-dir=/var/www/html
 
 echo "Caching config..."
 php artisan config:cache
