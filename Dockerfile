@@ -27,8 +27,8 @@ WORKDIR /var/www
 COPY . /var/www
 
 # Install production dependencies
-RUN composer require turso/libsql dev-master
 RUN composer require turso/libsql-laravel:^0.2.0 -W
+RUN composer require turso/libsql dev-master
 RUN composer update -W
 # RUN composer install --no-dev --optimize-autoloader --no-interaction
 
