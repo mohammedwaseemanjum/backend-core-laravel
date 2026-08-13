@@ -1,3 +1,4 @@
 {
-    "Merchant": true
+    "Merchant": true,
+    "Authentication": true
 }
