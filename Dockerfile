@@ -35,7 +35,7 @@ COPY composer.json composer.lock ./
 COPY . /var/www
 
 # Install PHP dependencies
-RUN composer install --no-dev --optimize-autoloader --no-interaction --prefer-dist --ignore-platform-reqs
+RUN composer install --no-dev --optimize-autoloader --no-interaction --prefer-dist
 
 # Set correct permissions for storage and bootstrap cache
 RUN chown -R www-data:www-data /var/www/storage /var/www/bootstrap/cache
@@ -48,6 +48,12 @@ RUN chmod +x /var/www/deploy.sh
 
 # Copy Nginx configuration
 COPY ./nginx.conf /etc/nginx/nginx.conf
+
+# Laravel package discovery
+RUN php artisan package:discover --ansi
+
+# Clear cached configuration
+RUN php artisan optimize:clear
 
 # Expose Render's expected port
 EXPOSE 80
