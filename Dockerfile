@@ -66,9 +66,6 @@ COPY ./nginx.conf /etc/nginx/nginx.conf
 # Laravel package discovery
 RUN php artisan package:discover --ansi
 
-# Clear Laravel cache
-RUN php artisan optimize:clear
-
 # Render uses port 80
 EXPOSE 80
 
