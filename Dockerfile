@@ -28,7 +28,6 @@ COPY . /var/www
 
 # Install production dependencies
 RUN composer update
-RUN composer install --no-dev --optimize-autoloader --no-interaction
 
 # Set correct permissions for storage and bootstrap cache
 RUN chown -R www-data:www-data /var/www/storage /var/www/bootstrap/cache
