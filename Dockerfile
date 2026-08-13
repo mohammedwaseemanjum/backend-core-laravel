@@ -28,14 +28,11 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 # Set working directory
 WORKDIR /var/www
 
-# Copy composer files first for Docker layer caching
-COPY composer.json composer.lock ./
-
 # Copy existing application directory contents
 COPY . /var/www
 
 # Install PHP dependencies
-RUN composer install --no-dev --optimize-autoloader --no-interaction --prefer-dist
+RUN composer install --no-dev --optimize-autoloader
 
 # Set correct permissions for storage and bootstrap cache
 RUN chown -R www-data:www-data /var/www/storage /var/www/bootstrap/cache
