@@ -30,7 +30,10 @@ COPY . /var/www
 RUN composer install --no-dev --optimize-autoloader --no-interaction
 
 # Set correct permissions for storage and bootstrap cache
-RUN chown -R www-data:www-data /var/www/storage /var/www/bootstrap/cache /var/www/database
+RUN chown -R www-data:www-data /var/www/storage /var/www/bootstrap/cache
+
+RUN chown -R www-data:www-data /var/www/database
+RUN chmod -R 775 /var/www/database
 
 # Make deployment script executable
 RUN chmod +x /var/www/deploy.sh
