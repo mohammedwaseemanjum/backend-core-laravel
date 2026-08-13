@@ -3,6 +3,11 @@
 # Fail immediately if any command fails
 set -e
 
+if [ ! -f /var/www/database/database.sqlite ]; then
+    echo "--- Creating fresh SQLite database file ---"
+    touch /var/www/database/database.sqlite
+fi
+
 echo "🚀 Starting Laravel 12 Deployment Scripts..."
 
 # Cache configuration, routes, and views for optimal performance
