@@ -51,6 +51,8 @@ RUN composer install \
     --optimize-autoloader \
     --no-interaction
 
+RUN composer require turso/libsql-laravel:^0.2.0 turso/libsql:dev-master -W
+
 # Set Laravel permissions
 RUN chown -R www-data:www-data /var/www/storage /var/www/bootstrap/cache
 

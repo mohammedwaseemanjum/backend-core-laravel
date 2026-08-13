@@ -10,9 +10,7 @@
         "laravel/framework": "^12.0",
         "laravel/sanctum": "^4.0",
         "laravel/tinker": "^2.10.1",
-        "nwidart/laravel-modules": "^12.0",
-        "turso/libsql": "dev-master",
-        "turso/libsql-laravel": "0.2.0"
+        "nwidart/laravel-modules": "^12.0"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",
