@@ -10,6 +10,12 @@ fi
 
 echo "🚀 Starting Laravel 12 Deployment Scripts..."
 
+# Clear old cached configuration
+php artisan config:clear
+php artisan cache:clear
+php artisan route:clear
+php artisan view:clear
+
 # Cache configuration, routes, and views for optimal performance
 echo "📦 Optimizing Configuration and Routing..."
 php artisan config:cache
