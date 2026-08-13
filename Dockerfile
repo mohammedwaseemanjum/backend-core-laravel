@@ -27,6 +27,7 @@ WORKDIR /var/www
 COPY . /var/www
 
 # Install production dependencies
+RUN composer update
 RUN composer install --no-dev --optimize-autoloader --no-interaction
 
 # Set correct permissions for storage and bootstrap cache
