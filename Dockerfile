@@ -17,7 +17,7 @@ COPY . .
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 # Install production dependencies
-RUN composer install --no-dev --optimize-autoloader && php artisan config:clear && php artisan cache:clear
+RUN composer install --no-dev --optimize-autoloader --no-interaction
 
 # Setup deployment script permissions
 RUN chmod +x /var/www/html/scripts/00-laravel-deploy.sh
