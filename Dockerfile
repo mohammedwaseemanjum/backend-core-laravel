@@ -3,7 +3,7 @@ FROM php:8.3-fpm-alpine
 
 # Install system dependencies and PHP extensions required for Laravel 12
 RUN apk add --no-cache \
-    gcompat \
+    libc6-compat \
     libffi-dev \
     nginx \
     supervisor \
