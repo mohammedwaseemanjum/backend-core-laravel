@@ -27,10 +27,8 @@ WORKDIR /var/www
 COPY . /var/www
 
 # Install production dependencies
-RUN composer require turso/libsql-laravel:^0.2.0 -W
-RUN composer require turso/libsql dev-master
-RUN composer update -W
-# RUN composer install --no-dev --optimize-autoloader --no-interaction
+RUN composer require turso/libsql-laravel:^0.2.0 turso/libsql:dev-master -W
+RUN composer install --no-dev --optimize-autoloader --no-interaction
 
 # Set correct permissions for storage and bootstrap cache
 RUN chown -R www-data:www-data /var/www/storage /var/www/bootstrap/cache
