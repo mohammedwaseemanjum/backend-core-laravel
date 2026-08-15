@@ -5,39 +5,49 @@ namespace Modules\Authentication\Http\Controllers;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
+use Illuminate\Support\Facades\Cookie;
+use Illuminate\Support\Facades\DB;
 
 class AuthenticationController extends Controller
 {
     public function login(Request $request)
     {
-        $credentials = $request->validate([
-            'email' => ['required', 'email'],
-            'password' => ['required'],
-        ]);
+        $user = User::where('email', $request->email)->first();
 
-        if (Auth::attempt($credentials)) {
-            $request->session()->regenerate();
-
-            return response()->json([
-                'data' => $request->user()
-            ], 200);
+        if (! $user || ! Hash::check($request->password, $user->password)) {
+            throw ValidationException::withMessages([
+                'email' => ['The provided credentials are incorrect.'],
+            ]);
         }
 
-        throw ValidationException::withMessages([
-            'email' => __('auth.failed'),
-        ]);
-    }
+        $token = $user->createToken('auth_token')->plainTextToken;
 
-    public function logout(Request $request)
-    {
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
+        $cookie = cookie(
+            'sanctum_token',
+            $token,
+            120,
+            '/',
+            null,
+            true,
+            true,
+            'lax'
+        );
 
         return response()->json([
-            'message' => 'Logged out successfully, session cleared.'
-        ], 200);
+            'message' => 'Logged in successfully',
+            'user' => $request->user(),
+        ])->withCookie($cookie);
+    }
+
+    public function logout(Request $request, User $user)
+    {
+        $cookie = Cookie::forget('sanctum_token');
+        $user->tokens()->delete();
+
+        return response()->json([
+            'message' => 'Logged out successfully, session cleared.',
+        ], 200)->withCookie($cookie);
     }
 }
