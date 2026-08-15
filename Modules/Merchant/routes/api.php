@@ -7,9 +7,12 @@ Route::middleware(['auth:sanctum'])
     ->prefix('merchants')
     ->controller(MerchantController::class)
     ->group(function () {
-        Route::get('test', function () {
+        Route::get('/', function () {
             return 1;
         });
+        // Route::post('upload', 'upload');
+        // Route::post('delete', 'delete');
+        // Route::post('update', 'update');
     });
 
 
