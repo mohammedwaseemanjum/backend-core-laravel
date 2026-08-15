@@ -16,6 +16,9 @@ php artisan cache:clear
 php artisan route:clear
 php artisan view:clear
 
+# Install Sanctum
+php artisan install:api
+
 # Cache configuration, routes, and views for optimal performance
 echo "📦 Optimizing Configuration and Routing..."
 php artisan config:cache
