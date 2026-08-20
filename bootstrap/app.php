@@ -5,6 +5,7 @@ use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 use Illuminate\Http\Request;
 use App\Http\Middleware\AttachTokenFromCookie;
+use App\Http\Middleware\JwtMiddleware;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -13,9 +14,11 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        $middleware->alias([
-            'authentication' => AttachTokenFromCookie::class,
+        $middleware->encryptCookies(except: [
+            'token'
         ]);
+
+        $middleware->api(prepend: [JwtMiddleware::class]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         $exceptions->shouldRenderJsonWhen(

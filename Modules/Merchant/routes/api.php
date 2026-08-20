@@ -3,8 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use Modules\Merchant\Http\Controllers\MerchantController;
 
-Route::middleware('authentication')
-    ->prefix('merchants')
+Route::prefix('merchants')
     ->controller(MerchantController::class)
     ->group(function () {
         Route::get('/', function () {

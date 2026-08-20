@@ -7,8 +7,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
-use Illuminate\Support\Facades\Cookie;
-use Illuminate\Support\Facades\DB;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
 class AuthenticationController extends Controller
 {
@@ -22,32 +21,33 @@ class AuthenticationController extends Controller
             ]);
         }
 
-        $token = $user->createToken('auth_token')->plainTextToken;
+        $credentials = $request->only('email', 'password');
+        $token = JWTAuth::attempt($credentials);
 
         $cookie = cookie(
-            'sanctum_token',
+            'token',
             $token,
             120,
             '/',
             null,
             true,
             true,
+            false,
             'lax'
         );
 
         return response()->json([
-            'message' => 'Logged in successfully',
-            'user' => $request->user(),
+            'message' => 'Logged in successfully.',
+            'user' => $user,
         ])->withCookie($cookie);
     }
 
     public function logout(Request $request, User $user)
     {
-        $cookie = Cookie::forget('sanctum_token');
-        $user->tokens()->delete();
+        JWTAuth::invalidate(JWTAuth::getToken());
 
         return response()->json([
-            'message' => 'Logged out successfully, session cleared.',
-        ], 200)->withCookie($cookie);
+            'message' => 'Logged out successfully.'
+        ], 200)->withoutCookie('token');
     }
 }
