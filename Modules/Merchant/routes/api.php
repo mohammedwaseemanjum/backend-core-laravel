@@ -6,12 +6,10 @@ use Modules\Merchant\Http\Controllers\MerchantController;
 Route::prefix('merchants')
     ->controller(MerchantController::class)
     ->group(function () {
-        Route::get('/', function () {
-            return 1;
-        });
-        // Route::post('upload', 'upload');
-        // Route::post('delete', 'delete');
-        // Route::post('update', 'update');
+        Route::get('/', 'index');
+        Route::post('create', 'create');
+        Route::delete('delete', 'delete');
+        Route::put('update', 'update');
     });
 
 

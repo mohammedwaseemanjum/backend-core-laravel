@@ -123,4 +123,7 @@ return [
         'store' => env('APP_MAINTENANCE_STORE', 'database'),
     ],
 
+    'storage' => [
+        'driver' => env('STORAGE_TYPE')
+    ]
 ];

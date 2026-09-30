@@ -3,58 +3,46 @@
 namespace Modules\Merchant\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Models\Media;
+use App\Models\User;
+use App\Services\Upload\UploadService;
 use Illuminate\Http\Request;
 use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
+use Illuminate\Support\Facades\DB;
+use Modules\Merchant\Actions\UploadMerchantImage;
+use Modules\Merchant\Http\Requests\CreateMerchantRequest;
+use Modules\Merchant\Http\Requests\UpdateMerchantRequest;
+use Modules\Merchant\Models\Merchant;
+use Modules\Merchant\Services\MerchantService;
 
 class MerchantController extends Controller
 {
-    public function upload(Request $request)
+    public function index(Request $request)
     {
-        $request->validate([
-            'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
-        ]);
-
-        $uploadedFile = Cloudinary::uploadApi()->upload($request->file('image')->getRealPath(), [
-            'folder' => 'laravel_uploads',
-        ]);
-
-        $secureUrl = $uploadedFile['secure_url'];
-
         return response()->json([
-            'url' => $secureUrl,
-            'uploadedFile'=>$uploadedFile
+            'data' => Merchant::query()->with('media')->firstWhere('user_id', $request->user()->id)
         ]);
     }
 
-    public function delete(Request $request)
-    {
-
-        cloudinary()->uploadApi()->destroy($request->id);
-
+    public function create(CreateMerchantRequest $request, MerchantService $merchantService) {
         return response()->json([
-            'url' => 'yes'
+            'data' => $merchantService->save($request)
         ]);
     }
 
-    public function update(Request $request)
+    public function update(UpdateMerchantRequest $request, MerchantService $merchantService)
     {
-        $request->validate([
-            'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'id' => 'required'
-        ]);
-
-        cloudinary()->uploadApi()->destroy($request->id);
-
-        $uploadedFile = Cloudinary::uploadApi()->upload($request->file('image')->getRealPath(), [
-            'folder' => 'laravel_uploads',
-        ]);
-
-        $secureUrl = $uploadedFile['secure_url'];
-
         return response()->json([
-            'url' => $secureUrl,
-            'uploadedFile'=>$uploadedFile
+            'data' => $merchantService->update($request)
         ]);
     }
 
+    public function delete(Request $request, MerchantService $merchantService)
+    {
+       $merchantService->delete($request);
+
+        return response()->json([
+            'message' => 'Delete merchant successfully'
+        ]);
+    }
 }

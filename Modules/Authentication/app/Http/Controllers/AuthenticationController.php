@@ -4,47 +4,43 @@ namespace Modules\Authentication\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Services\Token\TokenService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
-use Tymon\JWTAuth\Facades\JWTAuth;
 
 class AuthenticationController extends Controller
 {
+    public function index(Request $request)
+    {
+        return response()->json([
+            'data' => User::query()->with('merchant.media')->firstWhere('id', $request->user()->id)
+        ]);
+    }
+
     public function login(Request $request)
     {
-        $user = User::where('email', $request->email)->first();
+        $user = User::query()->with('merchant.media')->where('email', $request->email)->first();
 
         if (! $user || ! Hash::check($request->password, $user->password)) {
-            throw ValidationException::withMessages([
-                'email' => ['The provided credentials are incorrect.'],
-            ]);
+            return response()->json([
+                'message' => 'Login failed.',
+            ], 401);
         }
 
         $credentials = $request->only('email', 'password');
-        $token = JWTAuth::attempt($credentials);
 
-        $cookie = cookie(
-            'token',
-            $token,
-            120,
-            '/',
-            null,
-            true,
-            true,
-            false,
-            'lax'
-        );
+        $cookie = TokenService::createCookieFromUser($credentials);
 
         return response()->json([
             'message' => 'Logged in successfully.',
-            'user' => $user,
+            'data' => $user
         ])->withCookie($cookie);
     }
 
-    public function logout(Request $request, User $user)
+    public function logout()
     {
-        JWTAuth::invalidate(JWTAuth::getToken());
+        TokenService::revokeTokenFromUser();
 
         return response()->json([
             'message' => 'Logged out successfully.'
