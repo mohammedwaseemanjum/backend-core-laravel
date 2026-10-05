@@ -30,6 +30,6 @@ class Merchant extends Model
 
     public function media(): MorphMany
     {
-        return $this->morphMany(Media::class, 'modelable');
+        return $this->morphMany(Media::class, 'moduleable');
     }
 }
