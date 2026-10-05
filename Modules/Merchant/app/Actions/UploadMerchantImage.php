@@ -22,7 +22,6 @@ class UploadMerchantImage
 
     public function uploadCoverPhoto(CreateMerchantRequest $request, Merchant $merchant)
     {
-        dd($merchant);
         $upload = $this->uploader->upload($request->file('cover_photo')->getRealPath(), 'merchant_uploads/cover_photo');
 
         $merchant->media()->create([
