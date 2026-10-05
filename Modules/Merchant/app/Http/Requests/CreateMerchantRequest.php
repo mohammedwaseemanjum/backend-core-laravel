@@ -35,11 +35,11 @@ class CreateMerchantRequest extends FormRequest
 
     protected function prepareForValidation(): void
     {
-        // if ($this->has('meta_data')) {
-        //     $this->merge([
-        //         'meta_data' => json_decode($this->input('meta_data'), true),
-        //     ]);
-        // }
+        if ($this->has('meta_data')) {
+            $this->merge([
+                'meta_data' => json_decode($this->input('meta_data'), true),
+            ]);
+        }
 
         $this->merge([
             'user_id' => $this->user()?->id,
