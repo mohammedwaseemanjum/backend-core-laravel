@@ -10,6 +10,8 @@ class Media extends Model
         'name',
         'custom_properties',
         'file_name',
+        'modelable_id',
+        'modelable_type',
         'collection'
     ];
 

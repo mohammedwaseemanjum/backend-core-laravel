@@ -30,7 +30,8 @@ class UploadMerchantImage
             'collection' => 'merchant_uploads/cover_photo',
             'custom_properties' => [
                 'version' => $upload['version']
-            ]
+            ],
+            'modelable_id' => $merchant['id']
         ]);
     }
 
@@ -44,7 +45,8 @@ class UploadMerchantImage
             'collection' => 'merchant_uploads/profile_photo',
             'custom_properties' => [
                 'version' => $upload['version']
-            ]
+            ],
+            'modelable_id' => $merchant['id']
         ]);
     }
 
@@ -63,7 +65,8 @@ class UploadMerchantImage
             'collection' => 'merchant_uploads/cover_photo',
             'custom_properties' => [
                 'version' => $upload['version']
-            ]
+            ],
+            'modelable_id' => $merchant['id']
         ]);
     }
 
@@ -82,7 +85,8 @@ class UploadMerchantImage
             'collection' => 'merchant_uploads/profile_photo',
             'custom_properties' => [
                 'version' => $upload['version']
-            ]
+            ],
+            'modelable_id' => $merchant['id']
         ]);
     }
 
