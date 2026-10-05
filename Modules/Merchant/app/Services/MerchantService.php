@@ -10,6 +10,7 @@ use Modules\Merchant\Actions\UpdateMerchant;
 use Modules\Merchant\Actions\UploadMerchantImage;
 use Modules\Merchant\Http\Requests\CreateMerchantRequest;
 use Modules\Merchant\Models\Merchant;
+use Exception;
 
 class MerchantService
 {
