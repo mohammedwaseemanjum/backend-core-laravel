@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
 
 class Media extends Model
 {
@@ -10,8 +11,6 @@ class Media extends Model
         'name',
         'custom_properties',
         'file_name',
-        'modelable_id',
-        'modelable_type',
         'collection'
     ];
 
@@ -22,5 +21,10 @@ class Media extends Model
         return [
             'custom_properties' => 'array'
         ];
+    }
+
+    public function moduleable(): MorphTo
+    {
+        return $this->morphTo();
     }
 }

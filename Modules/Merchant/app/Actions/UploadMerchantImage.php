@@ -31,7 +31,6 @@ class UploadMerchantImage
             'custom_properties' => [
                 'version' => $upload['version']
             ],
-            'modelable_id' => $merchant['id']
         ]);
     }
 
@@ -46,7 +45,6 @@ class UploadMerchantImage
             'custom_properties' => [
                 'version' => $upload['version']
             ],
-            'modelable_id' => $merchant['id']
         ]);
     }
 
@@ -66,7 +64,6 @@ class UploadMerchantImage
             'custom_properties' => [
                 'version' => $upload['version']
             ],
-            'modelable_id' => $merchant['id']
         ]);
     }
 
@@ -86,7 +83,6 @@ class UploadMerchantImage
             'custom_properties' => [
                 'version' => $upload['version']
             ],
-            'modelable_id' => $merchant['id']
         ]);
     }
 
