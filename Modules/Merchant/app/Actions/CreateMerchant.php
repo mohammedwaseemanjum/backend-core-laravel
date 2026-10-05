@@ -10,6 +10,6 @@ class CreateMerchant
     {
         $dto = collect($request->toDto())->toArray();
         $merchant = Merchant::create($dto);
-        dd(Merchant::all());
+        dd($merchant->refresh());
     }
 }
