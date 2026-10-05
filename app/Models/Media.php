@@ -23,7 +23,7 @@ class Media extends Model
         ];
     }
 
-    public function moduleable(): MorphTo
+    public function modelable(): MorphTo
     {
         return $this->morphTo();
     }
