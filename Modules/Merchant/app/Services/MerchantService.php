@@ -28,11 +28,20 @@ class MerchantService
         //     $this->uploadMerchantImage->uploadProfilePhoto($request, $merchant);
         // });
 
-        $merchant = $this->createMerchant->handle($request);
-            $this->uploadMerchantImage->uploadCoverPhoto($request, $merchant);
-            $this->uploadMerchantImage->uploadProfilePhoto($request, $merchant);
 
-        return Merchant::query()->with('media')->firstWhere('user_id', request()->user()->id);
+            DB::beginTransaction();
+
+            try {
+                $merchant = $this->createMerchant->handle($request);
+                $this->uploadMerchantImage->uploadCoverPhoto($request, $merchant);
+                $this->uploadMerchantImage->uploadProfilePhoto($request, $merchant);
+
+                DB::commit();
+            } catch (Exception $e) {
+                DB::rollBack();
+            }
+
+            return Merchant::query()->with('media')->firstWhere('user_id', request()->user()->id);
     }
 
     public function update(Request $request)
