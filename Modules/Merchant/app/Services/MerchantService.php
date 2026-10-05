@@ -22,11 +22,15 @@ class MerchantService
 
     public function save(CreateMerchantRequest $request)
     {
-        DB::transaction(function () use ($request) {
-            $merchant = $this->createMerchant->handle($request);
+        // DB::transaction(function () use ($request) {
+        //     $merchant = $this->createMerchant->handle($request);
+        //     $this->uploadMerchantImage->uploadCoverPhoto($request, $merchant);
+        //     $this->uploadMerchantImage->uploadProfilePhoto($request, $merchant);
+        // });
+
+        $merchant = $this->createMerchant->handle($request);
             $this->uploadMerchantImage->uploadCoverPhoto($request, $merchant);
             $this->uploadMerchantImage->uploadProfilePhoto($request, $merchant);
-        });
 
         return Merchant::query()->with('media')->firstWhere('user_id', request()->user()->id);
     }
