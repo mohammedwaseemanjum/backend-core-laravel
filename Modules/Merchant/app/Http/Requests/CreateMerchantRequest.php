@@ -15,7 +15,7 @@ class CreateMerchantRequest extends FormRequest
             'profile_photo' => ['required', 'mimes:png,jpg'],
             'name' => ['required', 'string'],
             'meta_data' => ['required', 'array'],
-            'meta_data.store_name' => ['string'],
+            'meta_data.store_name' => ['string', 'required'],
             'meta_data.address_one' => ['string'],
             'meta_data.address_two' => ['string'],
             'meta_data.barangay' => ['required', 'string'],
@@ -35,11 +35,11 @@ class CreateMerchantRequest extends FormRequest
 
     protected function prepareForValidation(): void
     {
-        if ($this->has('meta_data')) {
-            $this->merge([
-                'meta_data' => json_decode($this->input('meta_data'), true),
-            ]);
-        }
+        // if ($this->has('meta_data')) {
+        //     $this->merge([
+        //         'meta_data' => json_decode($this->input('meta_data'), true),
+        //     ]);
+        // }
 
 
         $this->merge([
