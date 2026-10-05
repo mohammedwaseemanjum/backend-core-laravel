@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Modules\Merchant\Http\Requests\CreateMerchantRequest;
 use Modules\Merchant\Http\Requests\UpdateMerchantRequest;
 use Modules\Merchant\Models\Merchant;
+use Illuminate\Support\Facades\DB;
 
 /*
 Note: change the flow of uploaded images into
@@ -22,75 +23,85 @@ class UploadMerchantImage
 
     public function uploadCoverPhoto(CreateMerchantRequest $request, Merchant $merchant)
     {
-        $upload = $this->uploader->upload($request->file('cover_photo')->getRealPath(), 'merchant_uploads/cover_photo');
+        DB::transaction(function () use ($request, $merchant) {
+            $upload = $this->uploader->upload($request->file('cover_photo')->getRealPath(), 'merchant_uploads/cover_photo');
 
-        $merchant->media()->create([
-            'name' => $upload['display_name'],
-            'file_name' => $upload['display_name'] . '.' . $upload['format'],
-            'collection' => 'merchant_uploads/cover_photo',
-            'custom_properties' => [
-                'version' => $upload['version']
-            ],
-        ]);
+            $merchant->media()->create([
+                'name' => $upload['display_name'],
+                'file_name' => $upload['display_name'] . '.' . $upload['format'],
+                'collection' => 'merchant_uploads/cover_photo',
+                'custom_properties' => [
+                    'version' => $upload['version']
+                ],
+            ]);
+        });
     }
 
     public function uploadProfilePhoto(CreateMerchantRequest $request, Merchant $merchant)
     {
-        $upload = $this->uploader->upload($request->file('profile_photo')->getRealPath(), 'merchant_uploads/profile_photo');
+        DB::transaction(function () use ($request, $merchant) {
+            $upload = $this->uploader->upload($request->file('profile_photo')->getRealPath(), 'merchant_uploads/profile_photo');
 
-        $merchant->media()->create([
-            'name' => $upload['display_name'],
-            'file_name' => $upload['display_name'] . '.' . $upload['format'],
-            'collection' => 'merchant_uploads/profile_photo',
-            'custom_properties' => [
-                'version' => $upload['version']
-            ],
-        ]);
+            $merchant->media()->create([
+                'name' => $upload['display_name'],
+                'file_name' => $upload['display_name'] . '.' . $upload['format'],
+                'collection' => 'merchant_uploads/profile_photo',
+                'custom_properties' => [
+                    'version' => $upload['version']
+                ],
+            ]);
+        });
     }
 
     public function updateCoverPhoto(UpdateMerchantRequest $request, Merchant $merchant)
     {
         if (!$request->has('cover_photo')) return;
 
-        $media = $merchant->media->firstWhere('collection', 'merchant_uploads/cover_photo');
-        $this->uploader->delete('merchant_uploads/cover_photo/'.$media->name);
+        DB::transaction(function () use ($request, $merchant) {
+            $media = $merchant->media->firstWhere('collection', 'merchant_uploads/cover_photo');
+            $this->uploader->delete('merchant_uploads/cover_photo/'.$media->name);
 
-        $upload = $this->uploader->upload($request->file('cover_photo')->getRealPath(), 'merchant_uploads/cover_photo');
+            $upload = $this->uploader->upload($request->file('cover_photo')->getRealPath(), 'merchant_uploads/cover_photo');
 
-        $merchant->media()->update([
-            'name' => $upload['display_name'],
-            'file_name' => $upload['display_name'] . '.' . $upload['format'],
-            'collection' => 'merchant_uploads/cover_photo',
-            'custom_properties' => [
-                'version' => $upload['version']
-            ],
-        ]);
+            $merchant->media()->update([
+                'name' => $upload['display_name'],
+                'file_name' => $upload['display_name'] . '.' . $upload['format'],
+                'collection' => 'merchant_uploads/cover_photo',
+                'custom_properties' => [
+                    'version' => $upload['version']
+                ],
+            ]);
+        });
     }
 
     public function updateProfilePhoto(UpdateMerchantRequest $request, Merchant $merchant)
     {
         if (!$request->has('profile_photo')) return;
 
-        $media = $merchant->media->firstWhere('collection', 'merchant_uploads/profile_photo');
-        $this->uploader->delete('merchant_uploads/profile_photo/'.$media->name);
+        DB::transaction(function () use ($request, $merchant) {
+            $media = $merchant->media->firstWhere('collection', 'merchant_uploads/profile_photo');
+            $this->uploader->delete('merchant_uploads/profile_photo/'.$media->name);
 
-        $upload = $this->uploader->upload($request->file('profile_photo')->getRealPath(), 'merchant_uploads/profile_photo');
+            $upload = $this->uploader->upload($request->file('profile_photo')->getRealPath(), 'merchant_uploads/profile_photo');
 
-        $merchant->media()->update([
-            'name' => $upload['display_name'],
-            'file_name' => $upload['display_name'] . '.' . $upload['format'],
-            'collection' => 'merchant_uploads/profile_photo',
-            'custom_properties' => [
-                'version' => $upload['version']
-            ],
-        ]);
+            $merchant->media()->update([
+                'name' => $upload['display_name'],
+                'file_name' => $upload['display_name'] . '.' . $upload['format'],
+                'collection' => 'merchant_uploads/profile_photo',
+                'custom_properties' => [
+                    'version' => $upload['version']
+                ],
+            ]);
+        });
     }
 
     public function deletePhotos(Request $request)
     {
-        $merchant = Merchant::query()->firstWhere('user_id', $request->user()->id);
-        $merchant->media->map(function ($media) {
-            $this->uploader->delete($media->collection.'/'.$media->name);
+        DB::transaction(function () {
+            $merchant = Merchant::query()->firstWhere('user_id', $request->user()->id);
+            $merchant->media->map(function ($media) {
+                $this->uploader->delete($media->collection.'/'.$media->name);
+            });
         });
     }
 }
