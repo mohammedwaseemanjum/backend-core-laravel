@@ -5,12 +5,13 @@ namespace Modules\Merchant\Models;
 use App\Models\Media;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
+use Illuminate\Database\Eloquent\Concerns\HasUlids;
 
 class Merchant extends Model
 {
     use HasFactory;
+    use HasUlids;
 
     /**
      * The attributes that are mass assignable.
@@ -20,6 +21,9 @@ class Merchant extends Model
         'meta_data',
         'user_id'
     ];
+
+    protected $keyType = 'string';
+    public $incrementing = false;
 
     protected function casts(): array
     {
