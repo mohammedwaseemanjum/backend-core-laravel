@@ -24,6 +24,8 @@ class MerchantService
     {
         return DB::transaction(function () use ($request) {
             $merchant = $this->createMerchant->handle($request);
+            $merchant->refresh();
+            
             $this->uploadMerchantImage->uploadCoverPhoto($request, $merchant);
             $this->uploadMerchantImage->uploadProfilePhoto($request, $merchant);
 

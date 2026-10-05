@@ -9,8 +9,6 @@ class CreateMerchant
     public function handle(mixed $request): Merchant
     {
         $dto = collect($request->toDto())->toArray();
-        $merchant = Merchant::create($dto);
-        $merchant->refresh();
-        dd($merchant);
+        return Merchant::create($dto);
     }
 }
