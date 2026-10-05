@@ -4,7 +4,7 @@ namespace Modules\Merchant\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
-use Modules\Merchant\Dto\CreateMerchantDTO;
+use Modules\Merchant\Dto\CreateMerchantDto;
 
 class CreateMerchantRequest extends FormRequest
 {
@@ -47,8 +47,8 @@ class CreateMerchantRequest extends FormRequest
         ]);
     }
 
-    public function toDto(): CreateMerchantDTO
+    public function toDto(): CreateMerchantDto
     {
-        return CreateMerchantDTO::fromArray($this->validated());
+        return CreateMerchantDto::fromArray($this->validated());
     }
 }

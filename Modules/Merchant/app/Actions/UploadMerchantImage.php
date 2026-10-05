@@ -2,7 +2,7 @@
 
 namespace Modules\Merchant\Actions;
 
-use App\Services\Upload\UploadService;
+use App\Services\upload\UploadService;
 use Illuminate\Http\Request;
 use Modules\Merchant\Http\Requests\CreateMerchantRequest;
 use Modules\Merchant\Http\Requests\UpdateMerchantRequest;

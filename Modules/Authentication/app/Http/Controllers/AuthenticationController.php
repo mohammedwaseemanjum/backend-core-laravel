@@ -4,7 +4,7 @@ namespace Modules\Authentication\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
-use App\Services\Token\TokenService;
+use App\Services\token\TokenService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;

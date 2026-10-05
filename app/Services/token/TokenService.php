@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services\Token;
+namespace App\Services\token;
 
 use Tymon\JWTAuth\Facades\JWTAuth;
 use Symfony\Component\HttpFoundation\Cookie;

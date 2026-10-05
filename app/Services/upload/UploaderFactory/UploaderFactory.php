@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Services\Upload\UploaderFactory;
+namespace App\Services\upload\UploaderFactory;
 
-use App\Services\Upload\UploaderInterface;
+use App\Services\upload\UploaderInterface;
 use InvalidArgumentException;
 
 class UploaderFactory

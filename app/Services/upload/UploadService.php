@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Services\Upload;
+namespace App\Services\upload;
 
-use App\Services\Upload\UploaderFactory\UploaderFactory;
-use App\Services\Upload\UploaderInterface;
+use App\Services\upload\UploaderFactory\UploaderFactory;
+use App\Services\upload\UploaderInterface;
 
 class UploadService implements UploaderInterface
 {

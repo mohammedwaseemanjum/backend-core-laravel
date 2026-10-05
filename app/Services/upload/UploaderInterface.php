@@ -1,5 +1,5 @@
 <?php
-namespace App\Services\Upload;
+namespace App\Services\upload;
 
 interface UploaderInterface
 {
